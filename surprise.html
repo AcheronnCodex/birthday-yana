@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎶 Ngiti Surprise Hub 🎶</title>
+
+<style>
+/* ================= RESET ================= */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:
+    linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+    url("hhttps://i.pinimg.com/736x/ee/56/fd/ee56fd520c3cff05bbcbee9a9a63eff9.jpg");
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+}
+
+/* ================= ANIMATED BACKGROUND ================= */
+@keyframes bgMove{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+/* glow */
+body::before{
+    content:"";
+    position:absolute;
+    width:500px;
+    height:500px;
+    background:rgba(255,255,255,0.2);
+    filter:blur(120px);
+    border-radius:50%;
+    top:-150px;
+    left:-120px;
+}
+
+/* sparkle */
+body::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:radial-gradient(white 1px, transparent 1px);
+    background-size:35px 35px;
+    opacity:0.12;
+    pointer-events:none;
+}
+
+/* ================= FLOATING DECOR ================= */
+.bubble{
+    position:absolute;
+    border-radius:60%;
+    background:rgba(186, 7, 7, 0.18);
+    animation:float 6s ease-in-out infinite;
+}
+
+.b1{
+    width:80px;
+    height:80px;
+    top:18%;
+    right:8%;
+}
+
+.b2{
+    width:55px;
+    height:55px;
+    bottom:12%;
+    left:7%;
+    animation-delay:1s;
+}
+
+.b3{
+    width:35px;
+    height:35px;
+    top:65%;
+    right:18%;
+    animation-delay:2s;
+}
+
+
+.b4{
+    width:35px;
+    height:35px;
+    top:65%;
+    right:18%;
+    animation-delay:2s;
+}
+
+@keyframes float{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-20px);}
+}
+
+/* ================= HEADER ================= */
+header{
+    width:100%;
+    padding:18px 20px;
+    text-align:center;
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(10px);
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+    position:relative;
+    z-index:2;
+}
+
+header h1{
+    font-size:1.8rem;
+    color:#ff7b00;
+    text-shadow:0 0 10px rgba(255,255,255,0.7);
+}
+
+/* ================= NAVIGATION ================= */
+nav{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    padding:15px 20px 20px;
+    flex-wrap:wrap;
+    position:relative;
+    z-index:2;
+}
+
+nav button{
+    padding:12px 20px;
+    border:none;
+    border-radius:12px;
+    font-size:1rem;
+    font-weight:bold;
+    cursor:pointer;
+    background:white;
+    color:#333;
+    transition:0.3s;
+}
+
+nav button:hover{
+    transform:translateY(-3px) scale(1.03);
+    box-shadow:0 8px 18px rgba(255,165,0,0.25);
+}
+
+nav button.active{
+    background:#ff9800;
+    color:white;
+    box-shadow:0 8px 18px rgba(255,165,0,0.35);
+}
+
+/* ================= CONTENT ================= */
+.main{
+    width:100%;
+    height:calc(100vh - 155px);
+    padding:10px;
+    position:relative;
+    z-index:2;
+}
+
+iframe{
+    width:100%;
+    height:100%;
+    border:none;
+    border-radius:18px;
+    background:white;
+    box-shadow:0 10px 25px rgba(0,0,0,0.12);
+    opacity:1;
+    transition:opacity 0.35s ease;
+}
+
+/* ================= MOBILE ================= */
+@media(max-width:600px){
+
+    header h1{
+        font-size:1.35rem;
+    }
+
+    nav button{
+        width:90%;
+    }
+
+    .main{
+        height:calc(100vh - 235px);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🎶 BACKGROUND MUSIC -->
+<audio id="bgMusic" autoplay loop>
+    <source src="ngiti.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Decorations -->
+<div class="bubble b1"></div>
+<div class="bubble b2"></div>
+<div class="bubble b3"></div>
+
+<header>
+    <h1>🎶 Ngiti Birthday Surprise 🎶</h1>
+</header>
+
+<nav>
+    <button class="active" onclick="loadPage('message.html', this)">💌 Message</button>
+    <button onclick="loadPage('memory.html', this)">📸 Memories</button>
+</nav>
+
+<div class="main">
+    <iframe id="screen" src="message.html"></iframe>
+</div>
+
+<script>
+function loadPage(page, btn){
+    const frame = document.getElementById("screen");
+
+    document.querySelectorAll("nav button")
+        .forEach(button => button.classList.remove("active"));
+
+    btn.classList.add("active");
+
+    frame.style.opacity = "0";
+
+    setTimeout(() => {
+        frame.src = page;
+        frame.style.opacity = "1";
+    }, 300);
+}
+
+window.onload = function(){
+    const music = document.getElementById("bgMusic");
+    music.volume = 0.2;
+};
+</script>
+
+</body>
+</html>

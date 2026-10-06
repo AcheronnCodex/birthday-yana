@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory Board</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial;
+    background:#8ea0ad;
+    overflow-x:hidden;
+}
+
+/* TITLE */
+h2{
+    text-align:center;
+    color:white;
+    margin:20px;
+}
+
+/* BOARDS */
+.wrapper{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    padding:20px;
+}
+
+.board{
+    width:320px;
+    height:560px;
+    background:#d6b48a;
+    border:8px solid #7a4e2f;
+    overflow:auto;
+    position:relative;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+    padding:10px;
+}
+
+/* scrollbar */
+.board::-webkit-scrollbar{width:6px;}
+.board::-webkit-scrollbar-thumb{
+    background:#7a4e2f;
+    border-radius:10px;
+}
+
+/* CARD */
+.card{
+    background:white;
+    border-radius:10px;
+    margin:10px 0;
+    overflow:hidden;
+    box-shadow:2px 5px 12px rgba(0,0,0,0.2);
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.card:hover{transform:scale(1.03);}
+
+/* MEDIA */
+.card img,
+.card video{
+    width:100%;
+    height:140px;
+    object-fit:cover;
+}
+
+.caption{
+    text-align:center;
+    font-size:11px;
+    padding:5px;
+    background:#fff8dc;
+}
+
+/* VIEWER */
+.viewer{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.95);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    z-index:10;
+}
+
+.viewer img,
+.viewer video{
+    max-width:90%;
+    max-height:80vh;
+    border-radius:10px;
+}
+
+/* CLOSE */
+.close{
+    position:absolute;
+    top:20px;
+    right:30px;
+    font-size:40px;
+    color:white;
+    cursor:pointer;
+}
+
+/* CONTROLS */
+.controls button,
+#slideBtn{
+    font-size:18px;
+    padding:8px 12px;
+    margin:5px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+#slideBtn{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    z-index:20;
+    background:white;
+}
+
+/* FADE */
+.fade{
+    animation:fade 0.4s ease;
+}
+
+@keyframes fade{
+    from{opacity:0;}
+    to{opacity:1;}
+}
+
+</style>
+</head>
+
+<body>
+
+<h2>📌 Memory Board</h2>
+
+<button id="slideBtn" onclick="toggleSlideshow()">🎬 Slideshow</button>
+
+<div class="wrapper">
+    <div class="board" id="b1"></div>
+    <div class="board" id="b2"></div>
+    <div class="board" id="b3"></div>
+</div>
+
+<!-- VIEWER -->
+<div class="viewer" id="viewer">
+    <div class="close" onclick="closeViewer()">×</div>
+    <div id="viewerContent"></div>
+
+    <div class="controls">
+        <button onclick="prev()">⟨</button>
+        <button onclick="next()">⟩</button>
+    </div>
+</div>
+
+<script>
+
+/* ================= YOUR FILES (UNCHANGED) ================= */
+let items = [
+
+{type:"image", src:"img (1).jpg"},
+{type:"image", src:"img (2).jpg"},
+{type:"image", src:"img (3).jpg"},
+{type:"image", src:"img (4).jpg"},
+{type:"image", src:"img (5).jpg"},
+{type:"image", src:"img (6).jpg"},
+{type:"image", src:"img (7).jpg"},
+{type:"image", src:"img (8).jpg"},
+{type:"image", src:"img (9).jpg"},
+{type:"image", src:"img (10).jpg"},
+
+{type:"image", src:"img (11).jpg"},
+{type:"image", src:"img (12).jpg"},
+{type:"image", src:"img (13).jpg"},
+{type:"image", src:"img (14).jpg"},
+{type:"image", src:"img (15).jpg"},
+{type:"image", src:"img (16).jpg"},
+{type:"image", src:"img (17).jpg"},
+{type:"image", src:"img (18).jpg"},
+{type:"image", src:"img (19).jpg"},
+{type:"image", src:"img (20).jpg"},
+
+{type:"image", src:"img (21).jpg"},
+{type:"image", src:"img (22).jpg"},
+{type:"image", src:"img (23).jpg"},
+{type:"image", src:"img (24).jpg"},
+{type:"image", src:"img (25).jpg"},
+{type:"image", src:"img (26).jpg"},
+{type:"image", src:"img (27).jpg"},
+{type:"image", src:"img (28).jpg"},
+{type:"image", src:"img (29).jpg"},
+{type:"image", src:"img (30).jpg"},
+
+{type:"image", src:"img (31).jpg"},
+{type:"image", src:"img (32).jpg"},
+{type:"image", src:"img (33).jpg"},
+{type:"image", src:"img (34).jpg"},
+{type:"image", src:"img (35).jpg"},
+{type:"image", src:"img (36).jpg"},
+{type:"image", src:"img (37).jpg"},
+{type:"image", src:"img (38).jpg"},
+{type:"image", src:"img (39).jpg"},
+{type:"image", src:"img (40).jpg"},
+
+{type:"image", src:"img (41).jpg"},
+{type:"image", src:"img (42).jpg"},
+{type:"image", src:"img (43).jpg"},
+{type:"image", src:"img (44).jpg"},
+{type:"image", src:"img (45).jpg"},
+{type:"image", src:"img (46).jpg"},
+{type:"image", src:"img (47).jpg"},
+{type:"image", src:"img (48).jpg"},
+{type:"image", src:"img (49).jpg"},
+{type:"image", src:"img (50).jpg"},
+
+{type:"image", src:"img (51).jpg"},
+{type:"image", src:"img (52).jpg"},
+{type:"image", src:"img (53).jpg"},
+{type:"image", src:"img (54).jpg"},
+{type:"image", src:"img (55).jpg"},
+{type:"image", src:"img (56).jpg"},
+{type:"image", src:"img (57).jpg"},
+{type:"image", src:"img (58).jpg"},
+{type:"image", src:"img (59).jpg"},
+{type:"image", src:"img (60).jpg"},
+
+{type:"image", src:"img (61).jpg"},
+{type:"image", src:"img (62).jpg"},
+{type:"image", src:"img (63).jpg"},
+{type:"image", src:"img (64).jpg"},
+{type:"image", src:"img (65).jpg"},
+{type:"image", src:"img (66).jpg"},
+{type:"image", src:"img (67).jpg"},
+{type:"image", src:"img (68).jpg"},
+{type:"image", src:"img (69).jpg"},
+{type:"image", src:"img (70).jpg"},
+
+{type:"image", src:"img (71).jpg"},
+{type:"image", src:"img (72).jpg"},
+{type:"image", src:"img (73).jpg"},
+{type:"image", src:"img (74).jpg"},
+{type:"image", src:"img (75).jpg"},
+{type:"image", src:"img (76).jpg"},
+{type:"image", src:"img (77).jpg"},
+
+{type:"video", src:"vid1.mp4"},
+{type:"video", src:"vid2.mp4"},
+{type:"video", src:"vid3.mp4"},
+{type:"video", src:"vid4.mp4"},
+{type:"video", src:"vid5.mp4"}
+
+];
+
+/* ===== BOARDS ===== */
+let boards=[b1,b2,b3];
+
+/* ===== RENDER CARDS ===== */
+items.forEach((item,i)=>{
+
+    let div=document.createElement("div");
+    div.className="card";
+
+    div.innerHTML = item.type==="image"
+    ? `<img src="${item.src}"><div class="caption">Memory ${i+1}</div>`
+    : `<video muted src="${item.src}"></video><div class="caption">Video ${i+1}</div>`;
+
+    div.onclick=()=>openViewer(i);
+
+    boards[i%3].appendChild(div);
+});
+
+/* ===== VIEWER ===== */
+let current=0;
+
+function openViewer(i){
+    current=i;
+    document.getElementById("viewer").style.display="flex";
+    show();
+}
+
+function closeViewer(){
+    document.getElementById("viewer").style.display="none";
+}
+
+function show(){
+    let c=document.getElementById("viewerContent");
+    let item=items[current];
+
+    c.className="fade";
+
+    c.innerHTML = item.type==="image"
+    ? `<img src="${item.src}">`
+    : `<video controls autoplay src="${item.src}"></video>`;
+}
+
+/* NEXT / PREV */
+function next(){
+    current=(current+1)%items.length;
+    show();
+}
+
+function prev(){
+    current=(current-1+items.length)%items.length;
+    show();
+}
+
+/* ===== SLIDESHOW (IMAGE + VIDEO SUPPORTED) ===== */
+let slide=false;
+let interval;
+
+function toggleSlideshow(){
+    slide=!slide;
+
+    if(slide){
+        interval=setInterval(()=>{
+            next();
+        },1750);
+    }else{
+        clearInterval(interval);
+    }
+}
+
+</script>
+
+</body>
+</html>
